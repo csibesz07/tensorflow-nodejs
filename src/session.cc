@@ -52,7 +52,7 @@ NAN_METHOD(Session::New) {
 
     String::Utf8Value dirstr(info[3]->ToString());
     const char* dir = *dirstr;
-    const char* tags[numOfTags];
+    char** tags = new char*[numOfTags];
 
     for (uint32_t i = 0; i < numOfTags; i++) {
       tags[i] = *String::Utf8Value(Nan::Get(tagsArr, i).ToLocalChecked());

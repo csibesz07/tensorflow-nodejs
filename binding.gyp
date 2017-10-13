@@ -26,7 +26,18 @@
     "libraries": [
       "-Wl,-rpath,$(PWD)/tensorflow/lib",
       "-L$(PWD)/tensorflow/lib",
-      "-ltensorflow",
     ],
-  }]
+   'conditions': [
+     ['OS=="win"',{
+         "libraries": [
+            '"../tensorflow/lib/libtensorflow.lib"'
+         ] 
+     },#NON WIN
+     {
+         "libraries": [ 
+          "-ltensorflow"
+         ]
+     }]
+  ]
+  }],
 }

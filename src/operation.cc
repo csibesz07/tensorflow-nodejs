@@ -32,9 +32,9 @@ NAN_MODULE_INIT(Operation::Init) {
     Nan::New<String>("outputs").ToLocalChecked(), OutputsGetter);
 
   Nan::SetPrototypeMethod(tmpl, "setAttrType", SetAttrType);
-  Nan::SetPrototypeMethod(tmpl, "SetAttrBool", SetAttrBool);
-  Nan::SetPrototypeMethod(tmpl, "SetAttrInt", SetAttrInt);
-  Nan::SetPrototypeMethod(tmpl, "SetAttrFloat", SetAttrFloat);
+  Nan::SetPrototypeMethod(tmpl, "setAttrBool", SetAttrBool);
+  Nan::SetPrototypeMethod(tmpl, "setAttrInt", SetAttrInt);
+  Nan::SetPrototypeMethod(tmpl, "setAttrFloat", SetAttrFloat);
   Nan::SetPrototypeMethod(tmpl, "setAttrString", SetAttrString);
   Nan::SetPrototypeMethod(tmpl, "setAttrShape", SetAttrShape);
   Nan::SetPrototypeMethod(tmpl, "setAttrTensor", SetAttrTensor);
@@ -104,7 +104,7 @@ NAN_PROPERTY_GETTER(Operation::OutputsGetter) {
 
     // The `numOfDims` possibly to be -1
     if (numOfDims > 0) {
-      int64_t dims[numOfDims];
+      int64_t *dims = new int64_t[numOfDims];
       TF_GraphGetTensorShape(graph->_graph, output, dims, numOfDims, status);
       if (TF_GetCode(status) != TF_OK) {
         ThrowStatusError();
@@ -203,7 +203,7 @@ NAN_METHOD(Operation::SetAttrShape) {
 
   Local<String> lenstr = Nan::New("length").ToLocalChecked();
   size_t numOfDims = Nan::Get(maybeDims, lenstr).ToLocalChecked()->Uint32Value();
-  int64_t dims[numOfDims];
+  int64_t *dims=new int64_t[numOfDims];
 
   for (size_t i = 0; i < numOfDims; i++) {
     dims[i] = Nan::Get(maybeDims, i).ToLocalChecked()->Int32Value();
@@ -254,7 +254,7 @@ NAN_METHOD(Operation::AddInputList) {
 
   Local<Array> list = Local<Array>::Cast(info[0]);
   size_t len = list->Length();
-  TF_Output inputs[len];
+  TF_Output *inputs= new TF_Output[len];
 
   for (size_t i = 0; i < len; i++) {
     Local<Object> item = Nan::Get(list, i).ToLocalChecked()->ToObject();

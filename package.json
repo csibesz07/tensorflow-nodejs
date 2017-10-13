@@ -28,6 +28,7 @@
   "dependencies": {
     "bindings": "1.2.1",
     "bn.js": "^4.11.7",
+    "fs-extra": "^4.0.2",
     "gunzip-maybe": "^1.4.1",
     "nan": "2.6.2",
     "protobufjs": "6.8.0",

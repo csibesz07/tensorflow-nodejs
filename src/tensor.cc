@@ -80,10 +80,10 @@ NAN_METHOD(Tensor::New) {
     }
     Local<String> lenstr = Nan::New("length").ToLocalChecked();
     size_t numOfDims = Nan::Get(maybeDims, lenstr).ToLocalChecked()->Uint32Value();
-    int64_t dims[numOfDims];
+    int64_t *dims= new int64_t[numOfDims];
 
     for (size_t i = 0; i < numOfDims; i++) {
-      dims[i] = Nan::Get(maybeDims, i).ToLocalChecked()->Int32Value();
+      dims[i] = (int64_t) Nan::Get(maybeDims, i).ToLocalChecked()->Int32Value();
     }
 
     if (info.Length() == 3 && info[2]->IsObject()) {
@@ -143,7 +143,7 @@ NAN_METHOD(Tensor::StringEncode) {
   V8_STRING_TO_CSTR(src, info[0]);
   size_t srcLen = info[0]->ToString()->Length();
   size_t dstLen = TF_StringEncodedSize(srcLen);
-  char dst[dstLen];
+  char *dst=new char[dstLen];
 
   // FIXME(Yorkie): internally the result of this function is consistent with
   // `status`, so just use status instead of the returned value.
